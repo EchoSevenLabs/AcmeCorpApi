@@ -1,0 +1,25 @@
+version: '4.28.0'  # Use a version compatible with your Docker Compose
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: AcmeCorp.Api/Dockerfile
+    ports:
+      - "8000:80"  # Map the host port to the container port
+    depends_on:
+      - db  # Ensures the db service is started first
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=db;Database=Acme;User=sa;Password=${DB_PASSWORD};
+    command: ["./AcmeCorp.Api/wait-for-it.sh", "db:1433", "--", "dotnet", "./AcmeCorp.Api/AcmeCorp.Api.dll"]
+
+  db:
+    image: "mcr.microsoft.com/mssql/server:2019-latest"
+    environment:
+      SA_PASSWORD: "${SA_PASSWORD}"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+
+volumes:
+  db-data:

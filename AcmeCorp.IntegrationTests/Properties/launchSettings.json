@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "AcmeCorp.IntegrationTests": {
+      "commandName": "Project"
+    }
+  }
+}
